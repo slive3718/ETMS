@@ -5,14 +5,29 @@ class M_login extends CI_Model{
 		parent::__construct();
 	}
 
-	public function user_login($login_data){
-		$result = $this->db->select('*')->get_where('admin', $login_data);
+
+	function validate(){
+		$post = $this->input->post();
+
+		$this->db->select('u.*, a.id as admin_id, u.id as user_id')
+			->from('admin a')
+			->join('users u', 'a.user_id = u.id')
+			->where('u.email', htmlspecialchars($post['email']))
+			->where('u.password', htmlspecialchars($post['password']));
+		$result = $this->db->get();
 		if($result->num_rows() > 0){
-			return $result->row_array();
+
+			$session = array(
+				'fname'=>$result->result()[0]->first_name,
+				'lname'=> $result->result()[0]->last_name,
+				'id'=>$result->result()[0]->user_id,
+			);
+
+			$this->session->set_userdata($session);
+			echo json_encode('success');
 		}else{
-			return '';
+			echo json_encode('error');
 		}
 	}
-
 
 }
