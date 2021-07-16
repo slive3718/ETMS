@@ -7,6 +7,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		<div class="container" style="margin-top: 10%; max-width: 500px">
 			<form>
+				<div class="jumbotron">
+					<h1 class="text-center text-dark">Admin Login</h1>
+				</div>
 				<div class="form-group">
 					<label for="exampleInputEmail1">Email address</label>
 					<input type="email" class="form-control" id="email" aria-describedby="emailHelp">
@@ -31,6 +34,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		let email = $('#email').val();
 		let password = $('#password').val();
 			if($('#email').val() !== '' && $('#password').val()!==''){
+
+
 				$.post("<?=base_url()?>admin/login/validate/",
 						{
 							'email':email,

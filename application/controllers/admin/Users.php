@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Users extends CI_Controller {
 
 	public function __construct() {
 		parent:: __construct();
@@ -10,6 +10,7 @@ class Home extends CI_Controller {
 		if(!$this->session->userdata['id'] || $this->session->userdata['id'] === ''){
 			redirect(base_url().'admin/login');
 		}
+		$this->load->model('admin/M_users', 'm_users');
 	}
 
 	public function index(){
@@ -20,5 +21,24 @@ class Home extends CI_Controller {
 			->load->view('admin/common/footer');
 	}
 
+	public function getUserList(){
+		$this->m_users->getUserList();
+	}
+
+	public function addUser(){
+		$this->m_users->addUser();
+	}
+
+	public function getUserById(){
+		$this->m_users->getUserById();
+	}
+
+	public function updateUserData(){
+		$this->m_users->updateUserData();
+	}
+
+	public function addToDeletedUsers(){
+		$this->m_users->addToDeletedUsers();
+	}
 
 }
