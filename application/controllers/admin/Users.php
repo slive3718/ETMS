@@ -7,7 +7,7 @@ class Users extends CI_Controller {
 		parent:: __construct();
 
 		$this->load->model('admin/m_login', 'm_login');
-		if(!$this->session->userdata['id'] || $this->session->userdata['id'] === ''){
+		if(!$this->session->userdata['aid'] || $this->session->userdata['aid'] === ''){
 			redirect(base_url().'admin/login');
 		}
 		$this->load->model('admin/M_users', 'm_users');
@@ -40,5 +40,10 @@ class Users extends CI_Controller {
 	public function addToDeletedUsers(){
 		$this->m_users->addToDeletedUsers();
 	}
+
+	public function importUsers(){
+		$this->m_users->importUsers();
+	}
+
 
 }

@@ -30,7 +30,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<div class="row my-5">
 							<div class="col">
 								<div class="wy-text-right text-right">
-									<button class="btn btn-primary float-right" id="create-account-btn"><i class="fas fa-plus"></i> Create Account</button>
+									<button class="btn btn-primary float-right mr-5" id="create-account-btn"><i class="fas fa-plus"></i> Create Account</button>
+									<button class="btn btn-success float-right mr-2" id="import-account-btn"><i class="fas fa-upload"></i> Import Accounts</button>
 								</div>
 							</div>
 						</div>
@@ -71,7 +72,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 					<div class="row justify-content-md-center">
 						<div class="col-md-6">
-							<input type="text" name="user_id" class="form-control" id="user_id" value="" style="display: none">
+							<div class="input-group mb-2">
+								<div class="input-group-prepend">
+									<div class="input-group-text">Employee ID</div>
+								</div>
+								<input type="text" name="user_id" class="form-control" id="user_id" value="" style="display: block">
+							</div>
+
 							<div class="input-group mb-2">
 								<div class="input-group-prepend">
 									<div class="input-group-text">Account Type</div>
@@ -80,7 +87,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 									<option value="null"> </option>
 									<option value="1"> Admin </option>
 									<option value="2"> Manager </option>
-									<option value="3"> Employee </option>
+									<option value="3"> Technician </option>
+									<option value="4"> Employee </option>
 								</select>
 
 							</div>
@@ -187,6 +195,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 </div>
 
 
+<!-- Modal Upload Excel -->
+<div class="modal fade" id="upload-account-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="upload-modal-title">Upload Account Data (xlxs)</h5><br>
+
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<div class="form-group">
+					<input type="file" name="upload_file" id="upload_file" class="form-control">
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-success" id="doUploadBtn">Upload</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- DataTables  & Plugins -->
 <link rel="stylesheet" href="<?=base_url()?>vendor/adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <script src="<?=base_url()?>vendor/adminlte/plugins/datatables/jquery.dataTables.min.js"></script>
@@ -250,13 +283,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			}else if($('#account_type :selected').text()===''){
 				toastr['warning']('Account type required');
 				return false;
-			}else if($('#first_name').val()===''){
-				toastr['warning']('Account type required');
-				return false;
-			}else if($('#last_name').val()===''){
-				toastr['warning']('Account type required');
-				return false;
 			}
+			// else if($('#first_name').val()===''){
+			// 	toastr['warning']('First Name type required');
+			// 	return false;
+			// }else if($('#last_name').val()===''){
+			// 	toastr['warning']('Last Name type required');
+			// 	return false;
+			// }
 
 			formData = new FormData(document.getElementById('form-add-user'));
 
@@ -316,6 +350,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			var user_id = $(this).attr("data-user_id");
 			$('#modal-title').html('<strong>Manage Account</strong>');
 			$('#user_id').val(user_id);
+			$('#password').attr('type', 'password');
 			getUser(user_id);
 		})
 
@@ -372,13 +407,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			} else if($('#account_type :selected').text()===''){
 				toastr['warning']('Account type required');
 				return false;
-			}else if($('#first_name').val()===''){
-				toastr['warning']('Account type required');
-				return false;
-			}else if($('#last_name').val()===''){
-				toastr['warning']('Account type required');
-				return false;
 			}
+			// else if($('#first_name').val()===''){
+			// 	toastr['warning']('Account type required');
+			// 	return false;
+			// }else if($('#last_name').val()===''){
+			// 	toastr['warning']('Account type required');
+			// 	return false;
+			// }
 
 			if(!check_valid_email($('#email').val())){
 				return false;
@@ -393,7 +429,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				dataType: "json",
 				type: 'POST',
 				success: function (data) {
-					console.log(data);
+					// console.log(data);
 					if(data==='success'){
 						Swal.fire(
 								'Data Saved!',
@@ -429,7 +465,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		$('#create-account-modal #show-password').on('click', function(){
 			// alert();
-			$('#password').attr('type', 'text');
+			if($('#password').attr('type')==='password'){
+				$('#password').attr('type', 'text');
+			}else{
+				$('#password').attr('type', 'password');
+			}
+
 		})
 	})
 
@@ -450,6 +491,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 			$.each(response, function (i, data){
+				// console.log(data);
 				// console.log(data);
 				var deleteBtn = '<a href="" class="btn btn-danger btn-sm mx-1" id="delete-user-btn" data-user_id="'+data.id+'">Remove</a>';
 				var editBtn = '<a href="" class="btn btn-primary btn-sm mx-1" id="edit-user-btn" data-user_id="'+data.id+'">Manage</a>';
@@ -488,6 +530,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 		}).done(function(data){
 			data = JSON.parse(data);
+
 		 		// console.log(data)
 			$('#first_name').val(data.first_name);
 			$('#last_name').val(data.last_name);
@@ -518,4 +561,50 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 			return true;
 		}
 	}
+
+
+	$(function(){
+		$('#import-account-btn').on('click', function(){
+			$('#upload-account-modal').modal('show');
+		})
+
+		$('#doUploadBtn').on('click', function(){
+			let formData = new FormData();
+			formData.append('file', $('#upload_file')[0].files[0]);
+			$.ajax({
+				url: "<?=base_url('admin/users/importUsers')?>",
+				type: "POST",
+				data:  formData,
+				contentType: false,
+				cache: false,
+				processData:false,
+				dataType: "json",
+				success: function(data){
+					console.log(data);
+					if(data.status==='success'){
+						Swal.fire(
+								'Success!',
+								'<p class="text-primary">'+data.message+'<br><i class="text-danger">duplicate rows:</i>'+data.duplicateRows+'</p>',
+								'success'
+						);
+						getUserList();
+					}else if(data.status==='failed'){
+						Swal.fire(
+								'Warning!',
+								'<p class="text-primary">'+data.message+'<br><i class="text-danger">duplicate rows:</i>'+data.duplicateRows+'</p>',
+								'warning'
+						);
+						getUserList();
+					}else{
+						Swal.fire(
+								'Error!',
+								'<p class="text-primary">'+data.message+'<br><i class="text-danger">duplicate rows:</i>'+data.duplicateRows+'</p>',
+								'error'
+						);
+					}
+				}
+			});
+		})
+	})
+
 </script>

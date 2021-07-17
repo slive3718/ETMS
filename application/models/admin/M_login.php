@@ -19,7 +19,7 @@ class M_login extends CI_Model{
 			$session = array(
 				'username'=>$result->result()[0]->username,
 				'email'=>$result->result()[0]->email,
-				'id'=>$result->result()[0]->id,
+				'aid'=>$result->result()[0]->id,
 			);
 
 			$this->session->set_userdata($session);

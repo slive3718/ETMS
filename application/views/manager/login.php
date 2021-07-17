@@ -34,7 +34,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		let email = $('#email').val();
 		let password = $('#password').val();
 		if($('#email').val() !== '' && $('#password').val()!==''){
-			$.post("<?=base_url()?>admin/login/validate/",
+			$.post("<?=base_url()?>manager/login/validate/",
 				{
 					'email':email,
 					'password':password
@@ -49,7 +49,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 							timer:1500
 						});
 						window.setTimeout(function(){
-							window.location.href= '<?=base_url()?>admin/home';
+							window.location.href= '<?=base_url()?>manager/home';
 						} ,1000);
 
 

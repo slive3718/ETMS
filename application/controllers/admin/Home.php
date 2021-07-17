@@ -7,7 +7,7 @@ class Home extends CI_Controller {
 		parent:: __construct();
 
 		$this->load->model('admin/m_login', 'm_login');
-		if(!$this->session->userdata['id'] || $this->session->userdata['id'] === ''){
+		if(!$this->session->userdata['aid'] || $this->session->userdata['aid'] === ''){
 			redirect(base_url().'admin/login');
 		}
 	}
