@@ -77,7 +77,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 						<textarea type="text" name="task_description" class="form-control" id="task_description" rows="5" value=""></textarea>
 					</div>
 					<div class="form-group">
-						<input type="file" name="upload_file" id="task_file" class="form-control">
+						<input type="file" name="task_file" id="task_file" class="form-control">
 					</div>
 					<div class="input-group mb-2">
 						<div class="input-group-prepend">
@@ -118,7 +118,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 				dataType: "json",
 				type: 'POST',
 				success: function (data) {
-					console.log(data);
+					if(data.status==="success"){
+						Swal.fire(
+							'Success',
+							'Task Added!',
+							'success'
+						);
+					}
+
 				}
 			});
 
@@ -131,7 +138,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		}).done(function(data){
 			data = JSON.parse(data);
 				$('#employee-task-body').html('');
-			$.each(data, function(i, value){
+			$.each(data.result, function(i, value){
 
 				var manageBtn =
 				console.log(value);

@@ -153,7 +153,13 @@ class M_users extends CI_Model{
 		$insert_id = $this->db->insert_id();
 
 		if($_FILES){
-			print_r($_FILES);exit;
+			$this->db->update('tasks', array('file_name'=>$_FILES['task_file']['name']), array('id'=>$insert_id));
+		}
+
+		if($this->db->affected_rows() > 0){
+			echo json_encode(array('status'=>'success'));
+		}else{
+			echo  json_encode(array('status'=>'failed'));
 		}
 
 	}
@@ -163,9 +169,9 @@ class M_users extends CI_Model{
 			->from('tasks');
 		$tasks = $this->db->get();
 		if($tasks->num_rows()>0){
-			echo json_encode($tasks->result_array());
+			echo json_encode(array('status'=>'success','result'=>$tasks->result_array()));
 		}else{
-			echo json_encode(json_last_error());
+			echo json_encode(array('status'=>'failed'));
 		}
 	}
 }
