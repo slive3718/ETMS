@@ -8,10 +8,10 @@ class M_login extends CI_Model{
 
 	function validate(){
 		$post = $this->input->post();
-		$this->db->select('*')
+		$this->db->select('*, at.name as accountType')
 			->from('users u')
-//			->join('account_type at', 'u.account_type=at.id', 'left')
-//			->where('at.name', 'manager')
+			->join('account_type at', 'u.account_type=at.id', 'left')
+			->where('at.name', 'manager')
 			->where('u.email', htmlspecialchars($post['email']));
 
 		$result = $this->db->get();
@@ -19,9 +19,10 @@ class M_login extends CI_Model{
 			if(password_verify($post['password'], $result->result()[0]->password)){
 				$session = array(
 					'email'=>$result->result()[0]->email,
-					'uid'=>$result->result()[0]->id,
+					'mid'=>$result->result()[0]->id,
 					'first_name'=>$result->result()[0]->first_name,
-//				'account_type'=>$result->result()[0]->user_account_type
+					'last_name'=>$result->result()[0]->last_name,
+					'account_type'=>$result->result()[0]->accountType,
 				);
 
 

@@ -6,19 +6,19 @@ class Users extends CI_Controller {
 	public function __construct() {
 		parent:: __construct();
 
-		$this->load->model('admin/m_login', 'm_login');
-		if(!$this->session->userdata['id'] || $this->session->userdata['id'] === ''){
-			redirect(base_url().'admin/login');
+		$this->load->model('manager/m_login', 'm_login');
+		if(!$this->session->userdata['mid'] || $this->session->userdata['mid'] === ''){
+			redirect(base_url().'manager/login');
 		}
-		$this->load->model('admin/M_users', 'm_users');
+		$this->load->model('manager/M_users', 'm_users');
 	}
 
 	public function index(){
-		$this->load->view('admin/common/header')
-			->load->view('admin/common/menubar')
-			->load->view('admin/common/sidebar')
-			->load->view('admin/users')
-			->load->view('admin/common/footer');
+		$this->load->view('manager/common/header')
+			->load->view('manager/common/menubar')
+			->load->view('manager/common/sidebar')
+			->load->view('manager/home')
+			->load->view('manager/common/footer');
 	}
 
 	public function getUserList(){
@@ -41,4 +41,11 @@ class Users extends CI_Controller {
 		$this->m_users->addToDeletedUsers();
 	}
 
+	public function addEmployeeTask(){
+		$this->m_users->addEmployeeTask();
+	}
+
+	public function viewTaskList(){
+		$this->m_users->viewTaskList();
+	}
 }

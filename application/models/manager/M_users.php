@@ -138,4 +138,34 @@ class M_users extends CI_Model{
 			return false;
 		}
 	}
+
+	function addEmployeeTask(){
+		$post = $this->input->post();
+
+		$field_set= array(
+			'name'=>$post['task_name'],
+			'description'=>$post['task_description'],
+			'deadline'=>$post['task_deadline'],
+			'date_time'=>date('Y-m-d H:i:s')
+		);
+
+		$this->db->insert('tasks', $field_set);
+		$insert_id = $this->db->insert_id();
+
+		if($_FILES){
+			print_r($_FILES);exit;
+		}
+
+	}
+
+	function viewTaskList(){
+		$this->db->select('*')
+			->from('tasks');
+		$tasks = $this->db->get();
+		if($tasks->num_rows()>0){
+			echo json_encode($tasks->result_array());
+		}else{
+			echo json_encode(json_last_error());
+		}
+	}
 }

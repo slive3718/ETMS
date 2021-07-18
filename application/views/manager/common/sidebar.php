@@ -45,7 +45,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');?>
 <!--				</li>-->
 
 				<li class="nav-item">
-					<a href="<?=base_url().'admin/users/'?>" class="nav-link">
+					<a href="<?=base_url().'manager/users/'?>" class="nav-link">
 						<i class="nav-icon fas fa-users"></i>
 						<p>Maintenance</p>
 					</a>
